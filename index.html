@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+   <script type="text/javascript" src="js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="js/jquery-3.6.1.min.js"></script>
+</head>
+<body>
+	<div id="monito" name="monito"><img src="1474.gif"></div>
+	<form>
+      <br>
+      <p>Pais:
+         <select name="pais" id="pais">
+            <option value="MX">MEXICO</option>
+            <option value="US">ESTADOS UNIDOS</option>
+            <option value="CA">CANADA</option>
+         </select>
+      </p>
+
+      <p>Codigo    Postal:
+         <input type="text" name="cp" id="cp" required="required">
+        
+       </p>
+
+      <p>Colonia:
+         <select name="colonia" id="colonia">
+            
+         </select>
+       </p>
+      
+
+      <p>Estado:
+         <select name="estado" id="estado">
+
+         </select>
+		</p>	
+		<!--</select>
+      <br>
+      <output>Localidad:</output>
+		<select name="localidad" id="localidad">-->
+			
+      <p>Municipio:
+         <select name="municipio" id="municipio">
+            
+         </select>
+      </p>
+
+      <p>Georeferencia:
+         <select name="georeferencia" id="georeferencia">
+            
+         </select>
+      </p>
+	</form>
+
+      <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+      <script type="text/javascript">
+         $('#monito').hide();
+         
+         $('#cp').blur(function(e) {
+                  
+
+                  $.ajax({  
+                  type: "GET",  
+                  url: "https://data.opendatasoft.com/api/records/1.0/search/?dataset=geonames-postal-code%40public&q="+$(this).val()+"&facet=country_code&facet=admin_name1&facet=admin_code1&facet=admin_name2&refine.country_code="+$(pais).val()+" ", 
+                  dataType: "json", 
+                  beforeSend: function() {
+                     $('#monito').show();
+                  },
+                  complete: function(){
+                     $('#monito').hide();
+                  },
+                  success: function (data) {  
+                     $('#colonia').empty();
+                        $.each(data.records, function(i,item){
+                           console.log(item)
+                        $('#colonia').prepend('<option value="'+item.fields.place_name+'">'+item.fields.place_name+", "+item.fields.admin_name2+", "+item.fields.admin_name1+", "+item.fields.country_code+'</option>');   
+                     });
+
+                    /* $('#estado').empty();
+                        $.each(data.records, function(i,item){
+                           console.log(item)
+                        $('#estado').prepend('<option value="'+item.fields.admin_name1+'">'+item.fields.admin_name1+'</option>');   
+                     });
+
+
+                     $('#localidad').empty();
+                     $.each(data.records, function(i,item){
+                        console.log(item)
+                     $('#localidad').prepend('<option value="'+item.fields.place_name+'">'+item.fields.place_name+'</option>');   
+                     });
+
+                     $('#municipio').empty();
+                     $.each(data.records, function(i,item){
+                        console.log(item)
+                     $('#municipio').prepend('<option value="'+item.fields.admin_name2+'">'+item.fields.admin_name2+'</option>');   
+                     });
+
+                     $('#georeferencia').empty();
+                     $.each(data.records, function(i,item){
+                        console.log(item)
+                     $('#georeferencia').prepend('<option value="'+item.fields.coordinates+'">'+item.fields.coordinates+'</option>');   
+                     });*/
+
+
+                  }, //End of AJAX Success function  
+               
+               }); 
+
+         })
+
+         $(".tagging").select2({
+         tags: true
+         });
+
+         
+
+      </script>
+
+      <script type="text/javascript">
+         $('#monito').hide();
+         
+         $('#colonia').blur(function(e) {
+                  
+
+                  $.ajax({  
+                  type: "GET",  
+                  url: "https://data.opendatasoft.com/api/records/1.0/search/?dataset=geonames-postal-code%40public&q="+$(cp).val()+"&facet=country_code&facet=admin_name1&facet=admin_code1&facet=admin_name2&refine.country_code="+$(pais).val()+"&refine.place_name="+encodeURIComponent($(this).val())+" ", 
+                  dataType: "json", 
+                  beforeSend: function() {
+                     $('#monito').show();
+                  },
+                  complete: function(){
+                     $('#monito').hide();
+                  },
+                  success: function (data) {  
+                     /*$('#colonia').empty();
+                        $.each(data.records, function(i,item){
+                           console.log(item)
+                        $('#colonia').prepend('<option value="'+item.fields.place_name+'">'+item.fields.place_name+", "+item.fields.admin_name2+", "+item.fields.admin_name1+", "+item.fields.country_code+'</option>');   
+                     });*/
+
+                     $('#estado').empty();
+                        $.each(data.records, function(i,item){
+                           console.log(item)
+                        $('#estado').prepend('<option value="'+item.fields.admin_name1+'">'+item.fields.admin_name1+'</option>');   
+                     });
+
+
+                     /*$('#localidad').empty();
+                     $.each(data.records, function(i,item){
+                        console.log(item)
+                     $('#localidad').prepend('<option value="'+item.fields.place_name+'">'+item.fields.place_name+'</option>');   
+                     });*/
+
+                     $('#municipio').empty();
+                     $.each(data.records, function(i,item){
+                        console.log(item)
+                     $('#municipio').prepend('<option value="'+item.fields.admin_name2+'">'+item.fields.admin_name2+'</option>');   
+                     });
+
+                     $('#georeferencia').empty();
+                     $.each(data.records, function(i,item){
+                        console.log(item)
+                     $('#georeferencia').prepend('<option value="'+item.fields.coordinates+'">'+item.fields.coordinates+'</option>');   
+                     });
+
+
+                  }, //End of AJAX Success function  
+               
+               }); 
+
+         })
+
+         $(".tagging").select2({
+         tags: true
+         });
+
+         
+
+      </script>
+      
+      
+
+</body>
+</html>
